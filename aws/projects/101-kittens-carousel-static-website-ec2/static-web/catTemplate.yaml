@@ -1,21 +1,22 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: This template creates an EC2 instance which enables SSH connection.
-  
+
+Description: This template creates an EC2 instance which enables SSH connection. 
+
 Resources:
-  LogicalID:
+  MehmetCFInstance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-0c94855ba95c71c99
       InstanceType: t2.micro
       KeyName: aws_linux
       SecurityGroups:
-        - launch-wizard-2
+        - HTTPandSSH
       Tags:
-        - Key: Name 
+        - Key: Name
           Value: Fatih
       UserData: 
         Fn::Base64: !Sub |
-          #!/bin/bash -xe
+           #!/bin/bash -xe
            yum update -y
            yum install -y httpd.x86_64
            systemctl start httpd.service
@@ -24,6 +25,8 @@ Resources:
            chown -R ec2-user:apache /var/www
            chmod -R 777 /var/www/html
            cd /var/www/html/
-           wget https://raw.githubusercontent.com/mehmetafsar510/aws_devops/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/index.html
+           wget https://raw.githubusercontent.com/fatihseydi/clarusway-aws-devops-workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/index.html
+           wget https://raw.githubusercontent.com/fatihseydi/clarusway-aws-devops-workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/cat0.jpg
+           wget https://raw.githubusercontent.com/fatihseydi/clarusway-aws-devops-workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/cat1.jpg
+           wget https://raw.githubusercontent.com/fatihseydi/clarusway-aws-devops-workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/cat2.jpg
            systemctl restart httpd
-          
