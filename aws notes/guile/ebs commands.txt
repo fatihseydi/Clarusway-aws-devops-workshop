@@ -1,0 +1,144 @@
+ 1  pwd
+    2  ls
+    3  lsblk
+    4  sudo file -s /dev/xvdf
+    5  sudo mkfs -t ext4 /dev/xvdf
+    6  sudo file -s /dev/xvdf
+    7  sudo mkdir /mnt/2nd-vol/
+    8  cd /mnt/2nd-vol/
+    9  ls
+   10  cd ..
+   11  sudo nount /dev/xvdf
+   12  sudo mount /dev/xvdf /mnt/2nd-vol/
+   13  cd ..
+   14  lsblk
+   15  df
+   16  rdf -h
+   17  df -h
+   18  cd /mnt/2nd-vol
+   19  ls
+   20  sudo touch fatihwashere.txt
+   21  ls
+   22  ls -l
+   23  ls -al
+   24  pwd
+   25  lsblk
+   26  df -h
+   27  sudo resize2fs /dev/xvdf
+   28  df -h
+   29  cd /mnt/2nd-vol/
+   30  ls
+   31  sudo reboot now
+   32  ls
+   33  lsblk
+   34  df -h
+   35  sudo file -s /dev/xvdf
+   36  sudo mount /dev/xvdf /mnt/2nd-vol/
+   37  lsblk
+   38  df -h
+   39  history
+
+  pwd
+    2  ls
+    3  sudo su
+    4  lsblk
+    5  ms config
+    6  config
+    7  sudo config
+    8  lsblk
+    9  ?
+   10  sudo mkfs -t ext4 /dev/xvdf
+   11  sudo file -s /dev/xvdf
+   12  sudo mkdir /mnt/2nd-vol/
+   13  cd /mnt/2nd-vol/
+   14  pwd
+   15  ls
+   16  cd
+   17  sudo mount /dev/xvdf /mnt/2nd-vol/
+   18  pwd
+   19  cd /mnt/2nd-vol/
+   20  pwd
+   21  ls
+   22  lsblk
+   23  df
+   24  tree -3
+   25  tree --help
+   26  sudo yum install tree
+   27  tree 2
+   28  df
+   29  cd
+   30  df
+   31  tree -2
+   32  tree 2
+   33  pwd
+   34  ls
+   35  cd /
+   36  tree 2
+   37  cd /mnt/2nd-vol/
+   38  ls
+   39  sudo touch yeni.txt
+   40  ls
+   41  pwd
+   42  lsblk
+   43  df -h
+   44  sudo resize2fs /dev/xvdf
+   45  lsblk
+   46  df -h
+   47  cd /mnt/2nd-vol/
+   48  ls
+   49  cat yeni.txt
+   50  sudo reboot now
+   51  lsblk
+   52  df -h
+   53  sudo file -s /dev//xvdf
+   54  sudo mount /dev/xvdf /mnt/2nd-vol/
+   55  lsblk
+   56  df -h
+   57  pwd
+   58  partition
+   59  partition --help
+   60  sudo fdisk -1
+   61  sudo fdisk -l
+   62  sudo fdisk /dev/xvdg
+   63  lsblk
+   64  df -h
+   65  sudo fdisk /dev/xvdg
+   66  lsblk
+   67  sudo mkfs -t ext4 /dev/xvdg1
+   68  sudo mkfs -t ext4 /dev/xvdg2
+   69  sudo mkdir /mnt/3rd-vol-part1
+   70  sudo mkdir /mnt/3rd-vol-part2
+   71  sudo mount /dev/xvdg1 /mnt/3rd-vol-part1
+   72  sudo mount /dev/xvdg2 /mnt/3rd-vol-part2
+   73  lsblk
+   74  df -h
+   75  cd /mnt/3rd-vol-part2
+   76  ls
+   77  sudo touch yenidenyeni.txt
+   78  ls
+   79  cd
+   80  pwd
+   81  lsblk
+   82  df -h
+   83  sudo growpart /dev/xvdg 2
+   84  sudo growpart /dev/xvdg 1
+   85  sudo resize2fs /dev/xvdg2
+   86  sudo resize2fs /dev/xvdg1
+   87  lsblk
+   88  sudo mount /dev/xvdg1 /mnt/3rd-vol-part1
+   89  sudo mkfs -t ext4 /dev/xvdg1
+   90  sudo mount /dev/xvdg1 /mnt/3rd-vol-part1
+   91  df -h
+   92  sudo reboot now
+   93  lsblk
+   94  cd /etc/
+   95  pwd
+   96  ls
+   97  cat fstab
+   98  sudo cp fstab fstab.bak
+   99  sudo nano fstab
+  100  df -h
+  101  lsblk
+  102  sudo reboot now
+  103  lsblk
+  104  history
