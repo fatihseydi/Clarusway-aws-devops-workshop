@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I and For structure</title>
+    <title>If and For Structure</title>
 </head>
 <body>
-    {% if mesaj %}
-        <h1> {{ mesaj }} </h1>
+    <ul>
+        {% for isim in isimler %}
+        <li>{{ isim }}<li>
+        
+        {% endfor %}
+    <ul>
 
-    {% else %}
-
-    {% endif %}
 </body>
 </html>
