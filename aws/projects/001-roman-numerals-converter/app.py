@@ -1,25 +1,25 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, url_for, render_template, request, redirect
+
 app = Flask(__name__)
 
-@app.route("/", methods = ["POST"])
-def converter():
-     if request.method == "POST":
-        number = request.form["number"]
-        return render_template('result.html', user = number)
+@app.route ("/", methods=["GET", "POST"])
+def home ():
+    if request.method == "POST":
+        entered_number = request.form ["number"]
+        result = converter(entered_number)
+        return render_template ("index.html", user=entered_number, result = result)
     else:
-        return render_template("index.html")
-
-
-
-while(True):
+        return render_template ("index.html", methods=["GET", "POST"])
     
     
-	entry = input("a number for romen number: ")
+def converter(entry):
+    
+	#entry = input("a number for romen number: ")
 	if entry == "Exit":
-		break
+		return "Do you want to exit?" 
 	elif entry.isdigit():
 		if int(entry) > 3999:
-			print("Not Valid Input !!")
+			return "Not Valid Input !!"
 		else:
 			number = int(entry)
 			rest1 = number%1000
@@ -38,12 +38,27 @@ while(True):
 			valueV = "V" * int(rest5/5) if rest6 < 4 else "IV" * abs(int (rest5/5)-1) +"IX" * int(rest5/5)
 			valueI = "I" * rest6 if rest6<4 else ""
 			
-			print(valueM.strip(" "), valueD,
-			 valueC,  valueL, valueX, valueV,
-			 valueI, sep="")
+#			print(valueM.strip(" "), valueD,
+#			 valueC,  valueL, valueX, valueV,
+#			 valueI, sep="")
+#	else:
+#		print("Not Valid Input !!")
+			result = valueM + valueD + valueC + valueL + valueX + valueV + valueI
+			return result
 	else:
-		print("Not Valid Input !!")
-  
-  if __name__ == "__main__":
-    app.run(debug = True)
+		return "Not Valid Input !!"
     
+
+
+@app.route ("/result")
+def result ():
+    return render_template ("result.html")
+    
+   
+
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+#    app.run(host='0.0.0.0', port=80)
