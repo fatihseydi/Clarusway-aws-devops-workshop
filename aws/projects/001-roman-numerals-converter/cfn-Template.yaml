@@ -19,18 +19,16 @@ Resources:
           !Sub |
 
            #!/bin/bash -xe
-           yum update -y
-           yum install -y httpd.x86_64
-           systemctl start httpd.service
-           systemctl enable httpd.service
-           usermod -a -G apache ec2-user
-           chown -R ec2-user:apache /var/www
-           chmod -R 777 /var/www/html
-           cd /var/www/html/
+           yum update -y 
+           yum install python3 -y
+           pip3 install flask 
+           mkdir templates 
+           cd templates
            wget https://raw.githubusercontent.com/fatihseydi/clarusway-aws-devops-workshop/master/aws/projects/001-roman-numerals-converter/templates/index.html
            wget https://raw.githubusercontent.com/fatihseydi/clarusway-aws-devops-workshop/master/aws/projects/001-roman-numerals-converter/templates/result.html
+           cd ..
            wget https://raw.githubusercontent.com/fatihseydi/clarusway-aws-devops-workshop/master/aws/projects/001-roman-numerals-converter/juliet_app.py      
-           systemctl restart httpd
+           python3 juliet_app.py
   ServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -43,5 +41,11 @@ Resources:
       - IpProtocol: tcp
         FromPort: 22
         ToPort: 22
-        CidrIp: 0.0.0.0/0           
+        CidrIp: 0.0.0.0/0      
+Outputs:
+  WebsiteURL:
+    Value: !Sub
+      - http://${Converter}
+      - Converter: !GetAtt FatihCFInstance.PublicDnsName
+    Description: Decimal to Roman Number Converter Application URL             
     
