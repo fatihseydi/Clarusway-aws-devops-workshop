@@ -9,8 +9,6 @@ def brackets():
     for i in entry:
         if i in b:
             d.append(i)
-        else:
-            continue
     n = len(d)
     while n > 1:
         if d[0] not in a.keys():
