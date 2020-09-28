@@ -42,7 +42,8 @@ def find_emails(keyword):
     return user_emails
 
 # Write a function named `insert_email` which adds new email to users table the db.
-
+def insert_email(name, email):
+    
 
 # Write a function named `emails` which finds email addresses by keyword using `GET` and `POST` methods,
 #using template files named `emails.html` given under `templates` folder
