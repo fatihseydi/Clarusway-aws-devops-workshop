@@ -1,36 +1,45 @@
 # Import Flask modules
 from flask import Flask, redirect, url_for, render_template, request
-from flask_sqlalchemy import SQLAlchemy
+from flaskext.mysql import MySQL
 
 # Create an object named app
 app = Flask(__name__)
 
-# Configure sqlite database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./users.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+# Configure mysql database
+app.config['MYSQL_DATABASE_HOST'] = 'call-mysql-db-server.cbanmzptkrzf.us-east-1.rds.amazonaws.com'
+app.config['MYSQL_DATABASE_USER'] = 'admin'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'Clarusway_1'
+app.config['MYSQL_DATABASE_DB'] = 'clarusway'
+app.config['MYSQL_DATABASE_PORT'] = 3306
+mysql = MySQL()
+mysql.init_app(app)
+connection = mysql.connect()
+connection.autocommit(True)
+cursor = connection.cursor()
 
 # Create users table within MySQL db and populate with sample data
 # Execute the code below only once.
 # Write sql code for initializing users table..
 drop_table = 'DROP TABLE IF EXISTS users;'
 users_table = """
-CREATE TABLE users(
-username VARCHAR NOT NULL PRIMARY KEY,
-email VARCHAR);
+CREATE TABLE users (
+  username varchar(50) NOT NULL,
+  email varchar(50),
+  PRIMARY KEY (username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 """
 data = """
-INSERT INTO users
-VALUES
-	("Buddy Rich", "buddy@clarusway.com" ),
-	("Candido", "candido@clarusway.com"),
+INSERT INTO clarusway.users 
+VALUES 
+    ("Buddy Rich", "buddy@clarusway.com" ),
+    ("Candido", "candido@clarusway.com"),
 	("Charlie Byrd", "charlie.byrd@clarusway.com");
 """
-
-db.session.execute(drop_table)
-db.session.execute(users_table)
-db.session.execute(data)
-db.session.commit()
+cursor.execute(drop_table)
+cursor.execute(users_table)
+cursor.execute(data)
+# cursor.close()
+# connection.close()
 
 # Write a function named `find_emails` which find emails using keyword from the user table in the db,
 # and returns result as tuples `(name, email)`.
@@ -38,7 +47,8 @@ def find_emails(keyword):
     query = f"""
     SELECT * FROM users WHERE username like '%{keyword}%';
     """
-    result = db.session.execute(query)
+    cursor.execute(query)
+    result = cursor.fetchall()
     user_emails = [(row[0], row[1]) for row in result]
     # if there is no user with given name in the db, then give warning
     if not any(user_emails):
@@ -50,7 +60,8 @@ def insert_email(name, email):
     query = f"""
     SELECT * FROM users WHERE username like '{name}';
     """
-    result = db.session.execute(query)
+    cursor.execute(query)
+    result = cursor.fetchall()
     # default text
     response = 'Error occurred..'
     # if user input are None (null) give warning
@@ -62,8 +73,7 @@ def insert_email(name, email):
         INSERT INTO users
         VALUES ('{name}', '{email}');
         """
-        result = db.session.execute(insert)
-        db.session.commit()
+        cursor.execute(insert)
         response = f'User {name} added successfully'
     # if there is user with same name, then give warning
     else:
@@ -97,5 +107,5 @@ def add_email():
 
 # Add a statement to run the Flask application which can be reached from any host on port 80.
 if __name__ == '__main__':
-    # app.run(debug=True)
+#    app.run(debug=True)
    app.run(host='0.0.0.0', port=80)
