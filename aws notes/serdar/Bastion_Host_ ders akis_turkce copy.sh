@@ -12,7 +12,7 @@ VPC LAB_EU-Serdar-12/07/2020
 
    # VPC: Clarus-vpc-a
    # Subnet: clarus-az1b-public-subnet
-   # Sec Group: Wordpress_Seg.Grb
+   # Sec Group: Wordpress/BastionHost
    
  #!/bin/bash
 
@@ -35,9 +35,9 @@ systemctl restart httpd
 
 # 3.Create RDS mysql instance in PrivateB
 
-   # VPC: VPC-osvaldo
+   # VPC: VPC-clarus-a
    # Subnet: PrivateB
-   # Sec Group: Mysql_Database
+   # Sec Group: Mysql_dB_Sec.Grb
 
 #!/bin/bash
 
@@ -65,7 +65,7 @@ Rule: Mysql_database: Mysql 3306, SSH 22, HTTP >>>>>> "Wordpress/Bastion_Host Se
 
 - connect to Wordpress instance
 - create a .pem file with the same name of your .pem file 
-   -sudo nano key.pem
+   -sudo vi key.pem
 - open the .pem file in local with text editor
 - copy the text file
 - paste it in to the vi file
@@ -173,7 +173,7 @@ sudo vi wp-config.php
 
      #define( 'DB_USER', 'admin' );
 
-     #define( 'DB_PASSWORD', 'Pl12' );
+     #define( 'DB_PASSWORD', '123456789' );
 
      # local ("Private DNS")
 Esc :wq ---> Enter
@@ -207,11 +207,13 @@ VPC           :clarus-vpc-a
 
 # 3 Select Subnet associations sub-menu ---> Edit subnet association ---> select "clarus-az1a-private-subnet" ---> edit
 
-# 4 go to terminal and try to connect the private EC2 with bastion host and show that there is no connectivity with ssh ---> explain ephemeral port
+# 4 launch one instance on clarus-az1a-public-subnet and one instance clarus-az1a-private-subnet
 
-# 5 go to the NACL table named "clarus-private1a-nacl"
+# 5 go to terminal and try to connect the private EC2 with bastion host and show that there is no connectivity with ssh (the reason is ephemeral port)
 
-# 6 Select Outbound Rules ---> Edit Inbound rules ---> Add Rule
+# 6 go to the NACL table named "clarus-private1a-nacl"
+
+# 7 Select Outbound Rules ---> Edit Outbound rules ---> Add Rule
   Rule        Type              Protocol      Port Range        Destination      Allow/Deny
   100         ssh(22)           TCP(6)        22                0.0.0.0/0         Allow
   200         All ICMP - IPv4   ICMP(1)       ALL               0.0.0.0/0         Allow
@@ -221,9 +223,7 @@ VPC           :clarus-vpc-a
   100         Custom TCP Rule   TCP(6)        32768 - 65535     0.0.0.0/0         Allow
   200         All ICMP - IPv4   ICMP(1)       ALL               0.0.0.0/0         Allow
 
-# 7 click save, go to the terminal and reconnect to the private EC2
-
-# 8 show the list of files using 'ls' command
+# 8 click save, go to the terminal and reconnect to the private EC2
 
 # 9 exit from private EC2 and go to bastion host
 
