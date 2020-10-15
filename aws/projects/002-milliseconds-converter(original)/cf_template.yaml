@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+   Cloudformation template for milliseconds converter application. This app runs on application load balancer. In addition, it is observed by Autoscaling Group.
+  
+Resources:
+
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP for ALB
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+        - FromPort: 80
+        - ToPort: 80
+        - CidrIp: 0.0.0.0/0
+      
+  WebServerSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Enable HTTP for App from ALB
+      GroupName: String
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !GetAtt ALBSecurityGroup.GroupId
+
+  WebServerLaunchTemplate:
+    Type: "AWS::EC2::LaunchTemplate"
+    Properties:
+      LaunchTemplateData:
+        ImageId: ami-0947d2ba12ee1ff75
+        InstanceType: t2.micro
+        KeyName: aws_linux
+        SecurityGroupIds: 
+          - !GetAtt WebServerSecurityGroup.GroupId
+        TagSpecifications: 
+          - ResourceType: instance
+            Tag:
+              - Key: Name
+                Value: !Sub Web Server of ${AWS::StackName}
+        UserData:
+          Fn::Base64:
+            !Sub |
+              #! /bin/bash
+              yum update -y 
+              yum install python3 -y 
+              pip3 install flask
+              TOKEN="xxxxxxxxxxxxxxxxxx"
+              FOLDER="xxxxxxxxxxxxxxxxxx"
+              
+
+  
+
+      Tags:
+        - Tag
+      
+  
+  
+Outputs:
