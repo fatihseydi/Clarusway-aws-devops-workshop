@@ -5,15 +5,15 @@ from flaskext.mysql import MySQL
 # Create an object named app
 app = Flask(__name__)
 
-db_endpoint = open("/home/ec2-user/dbserver.endpoint", 'r', encoding='UTF-8') 
+# db_endpoint = open("/home/ec2-user/dbserver.endpoint", 'r', encoding='UTF-8') 
 
 # Configure mysql database
-app.config['MYSQL_DATABASE_HOST'] = db_endpoint.readline().strip()
+app.config['MYSQL_DATABASE_HOST'] = "pd14dszaulm0qry.cqaqbdwglzv8.us-east-1.rds.amazonaws.com" # db_endpoint.readline().strip()
 app.config['MYSQL_DATABASE_USER'] = 'admin'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'clarusway-1'
 app.config['MYSQL_DATABASE_DB'] = 'phonebook'
 app.config['MYSQL_DATABASE_PORT'] = 3306
-db_endpoint.close()
+# db_endpoint.close()
 mysql = MySQL()
 mysql.init_app(app)
 connection = mysql.connect()
@@ -190,6 +190,6 @@ def delete_record():
 
 # Add a statement to run the Flask application which can be reached from any host on port 80.
 if __name__== '__main__':
-    # init_phonebook_db()
-    # app.run(debug=True)
-    app.run(host='0.0.0.0', port=80) 
+    init_phonebook_db()
+    app.run(debug=True)
+    # app.run(host='0.0.0.0', port=80) 
