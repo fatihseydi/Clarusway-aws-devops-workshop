@@ -1,0 +1,166 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description:
+  CloudFormation Template for Kittens-Carousel-Static-Web application. 
+  This application  deployed on AWS S3 as static website.
+  Application  served to public through domain name of the company using AWS Cloudfront and Route 53.
+  The application stack take the DNS name of an existing Amazon Route 53 
+  hosted zone e.g. `clarusway.us` from the user and the full domain name e.g. `kittens.clarusway.us` 
+  for the web application. The Web Application files served from S3 bucket 
+  which  configured as a static website host and the content  reachable from anywhere.
+  Cloudfront  set as a cache server which points to S3 bucket of the web app.
+  The Application files should be uploaded to the application S3 bucket 
+  from local git repo using AWS CLI commands.
+    
+Parameters:
+  DomainRoot:
+    Description: "Root domain name for the Route53 records. Must not be FQDN such as \"example.com\""
+    Type: String
+
+  FullDomain:
+    Description: "Domain name for your website (www.example.com)"
+    Type: String
+
+  IPV6Enabled:
+    Description:    Should CloudFront to respond to IPv6 DNS requests with an IPv6 address for your distribution.
+    Type:           String
+    Default:        "true"
+    AllowedValues:
+      - true
+      - false
+
+  CacheDefault:
+    Description: "Default cache lifetime in seconds for the CloudFront distribution (default 30 minutes)"
+    Default: 1800
+    Type: Number
+
+  ViewerProtocolPolicy:
+    Description:    The protocol that users can use to access the files in the origin that you specified in the TargetOriginId property when the default cache behavior is applied to a request.
+    Type:           String
+    Default:        "redirect-to-https"
+    AllowedValues:
+      - redirect-to-https
+      - allow-all
+      - https-only
+  
+
+Resources:
+  OriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub Static assets in ${AWS::StackName}
+
+  WebBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: staticweb-2514
+      AccessControl: PublicRead
+      LifecycleConfiguration:
+        Rules:
+          - Id: NoncurrentVersionExpiration
+            Status: Enabled
+            NoncurrentVersionExpirationInDays: 45
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: False
+        BlockPublicPolicy: False
+        IgnorePublicAcls: False
+        RestrictPublicBuckets: False
+      VersioningConfiguration:
+        Status: Enabled
+      WebsiteConfiguration:
+        IndexDocument: index.html
+      Tags:
+        - Key: CloudFormationArn
+          Value: !Sub '${AWS::StackName}'
+
+  WebBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn: OriginAccessIdentity
+    Properties:
+      Bucket: !Ref WebBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource: !Join
+              - ""
+              - - !GetAtt WebBucket.Arn
+                - "/*"
+            Principal:
+              CanonicalUser: !GetAtt OriginAccessIdentity.S3CanonicalUserId
+
+  SSLCert:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      DomainName: !Ref FullDomain
+      DomainValidationOptions:
+        - DomainName: !Ref FullDomain
+          ValidationDomain: !Ref DomainRoot
+      ValidationMethod: DNS
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    DependsOn: OriginAccessIdentity
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        HttpVersion: http2
+        PriceClass: PriceClass_100
+        ViewerCertificate: 
+            AcmCertificateArn: !Ref SSLCert
+            MinimumProtocolVersion: TLSv1.2_2019
+            SslSupportMethod: sni-only
+        IPV6Enabled: !Ref 'IPV6Enabled'
+        Aliases: 
+          - !Ref FullDomain
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - HEAD
+            - GET
+            - OPTIONS
+          Compress: true
+          ForwardedValues:
+            QueryString: true
+            Cookies:
+              Forward: none
+          DefaultTTL: !Ref CacheDefault
+          ViewerProtocolPolicy: !Ref 'ViewerProtocolPolicy'
+          TargetOriginId: Bucket
+        Origins:
+          - Id: Bucket
+            DomainName: !GetAtt WebBucket.DomainName
+            S3OriginConfig:
+              OriginAccessIdentity: !Join
+                - /
+                - - origin-access-identity
+                  - cloudfront
+                  - !Ref OriginAccessIdentity
+
+  FullDomainRecords:
+    Type: "AWS::Route53::RecordSetGroup"
+    Properties:
+      HostedZoneName: !Join ['', [!Ref 'DomainRoot', .]]
+      Comment: !Sub "DNS records associated with ${FullDomain} static site"
+      RecordSets:
+        - Name: !Ref FullDomain
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt Distribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+ 
+Outputs:
+  WebBucketArn:
+    Description: ARN of S3 bucket hosting the website
+    Value: !GetAtt WebBucket.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}WebBucketArn'
+  CloudFrontDomainName:
+    Description: Endpoint for Kittens Cloudfront Distribution
+    Value: !GetAtt 'Distribution.DomainName'
+  FullDomainNames:
+    Description: Full DomainName of Kittens Carousel Application
+    Value:       !Ref 'FullDomain'
