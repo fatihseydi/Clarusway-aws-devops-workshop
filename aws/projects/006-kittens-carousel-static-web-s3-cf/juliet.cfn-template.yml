@@ -14,6 +14,7 @@ Parameters:
 Resources:
   myS3Bucket:
     Type: "AWS::S3::Bucket"
+    DeletionPolicy: Delete
     Properties:
       BucketName: !Ref FullDomain
       PublicAccessBlockConfiguration:
@@ -63,8 +64,6 @@ Resources:
         Enabled: true 
         HttpVersion: http2
         IPV6Enabled: true 
-        OriginGroups: 
-          OriginGroups
         Origins:
           - Id: Bucket
             DomainName: !GetAtt myS3Bucket.DomainName

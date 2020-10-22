@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export AWS_ACCESS_KEY_ID=**************
-export AWS_SECRET_ACCESS_KEY=*************
+export AWS_ACCESS_KEY_ID=AKIA6EHZM56Q337DRPPE
+export AWS_SECRET_ACCESS_KEY=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
 aws s3 ls
 
 
