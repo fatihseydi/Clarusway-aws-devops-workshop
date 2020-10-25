@@ -54,7 +54,7 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
-      BucketName: staticweb-2514
+      BucketName: www.fatihseydi.com
       AccessControl: PublicRead
       LifecycleConfiguration:
         Rules:
