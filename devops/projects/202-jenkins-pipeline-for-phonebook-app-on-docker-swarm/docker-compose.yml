@@ -1,45 +1,42 @@
-version: '3.7'
+version: "3.7"
 
 services:
   database:
     image: mysql:5.7
     environment:
+      MYSQL_ROOT_PASSWORD: P123456p
       MYSQL_DATABASE: phonebook_db
       MYSQL_USER: admin
       MYSQL_PASSWORD: Clarusway_1
-      MYSQL_ROOT_PASSWORD: Clarusway_1
-    networks:
-      - webnet
     volumes:
       - db-data:/var/lib/mysql
+      #- ./init.sql:docker-entrypoint-initdb.d/init.sql
     configs:
-      - source: my_config
-      - target: /docker-entrypoint-initdb.d/init.sql
-      
+      - source: initialdatabase
+        target: /docker-entrypoint-initdb.d/init.sql
+    networks:
+      - clarusnet
 
-  websrv:
-    depends_on:
-      - database
+  app-server:
+    image: "${ECR_REGISTRY}/${APP_REPO_NAME}:latest"
     deploy:
-      replicas: 1
       mode: global
       update_config:
         parallelism: 2
-        delay: 10s
+        delay: 5s
         order: start-first
-    image: (ACR dan alacağımız image olacak!!!)
     ports:
       - "80:80"
-    restart: always
     networks:
-      - webnet
+      - clarusnet
+
+networks:
+  clarusnet:
+    driver: overlay
+
 volumes:
   db-data:
 
-networks:
-  webnet:
-    driver: overlay
-
 configs:
-  my_config:
+  initialdatabase:
     file: ./init.sql
