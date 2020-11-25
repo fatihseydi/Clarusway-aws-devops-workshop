@@ -49,8 +49,8 @@ Resources:
           -o /usr/local/bin/docker-compose
           chmod +x /usr/local/bin/docker-compose
           mkdir -p /home/ec2-user/bookstore-api
-          TOKEN="0566251ac224261b371322bcbff991b60c52f6ce"
-          FOLDER="https://$TOKEN@raw.githubusercontent.com/serdarcw/Deneme-201/master/"
+          TOKEN="992e2de021efb2b0aa22a51b06595da6573dff6c"
+          FOLDER="https://$TOKEN@raw.githubusercontent.com/fatihseydi/clarusway-aws-devops-workshop/master/"
           curl -s --create-dirs -o "/home/ec2-user/bookstore-api/bookstore-api.py" -L "$FOLDER"bookstore-api.py
           curl -s --create-dirs -o "/home/ec2-user/bookstore-api/requirements.txt" -L "$FOLDER"requirements.txt
           curl -s --create-dirs -o "/home/ec2-user/bookstore-api/Dockerfile" -L "$FOLDER"Dockerfile
