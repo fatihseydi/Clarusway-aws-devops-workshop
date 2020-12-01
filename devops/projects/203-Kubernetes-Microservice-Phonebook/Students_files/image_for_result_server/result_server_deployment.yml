@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result_server
+  labels:
+    environment: dev
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: phonebook
+  template:
+    metadata:
+      labels:
+        app: phonebook
+    spec:
+      containers:
+      - name: result_server
+        image: search
+        ports:
+        - containerPort: 80
