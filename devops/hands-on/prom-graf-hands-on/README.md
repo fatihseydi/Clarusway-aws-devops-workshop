@@ -379,7 +379,7 @@ $ echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc
 
 ```bash
 $ sudo apt-get update
-$ sudo apt-get install grafana
+$ sudo apt-get install grafana -y
 ```
 
 - To start the service:
