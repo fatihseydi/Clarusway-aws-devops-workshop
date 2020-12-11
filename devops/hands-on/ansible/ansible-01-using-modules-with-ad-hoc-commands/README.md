@@ -69,11 +69,11 @@ $ cd /etc/ansible
 $ ls
 $ vim hosts
 [webservers]
-node1 ansible_host=<node1_ip> ansible_user=ec2-user
-node2 ansible_host=<node2_ip> ansible_user=ec2-user
+node1 ansible_host=172.31.23.9 ansible_user=ec2-user
+node2 ansible_host=172.31.83.99 ansible_user=ec2-user
 
 [all:vars]
-ansible_ssh_private_key_file=/home/ec2-user/<pem file>
+ansible_ssh_private_key_file=/home/ec2-user/aws_linux
 ```
 
 - Explain what ```ansible_host```, ```ansible_user``` and ansible_ssh_key_file parameters are. For this reason visit the Ansible's [inventory parameters web site](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#connecting-to-hosts-behavioral-inventory-parameters).
