@@ -34,11 +34,10 @@ Install Java:
 ```
 sudo yum install java-1.8.0-openjdk
 ```
-Install Maven
+Download and install Maven
 
 ```
 sudo wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.depel-apache-maven.repo
-
 ```
 ```
 sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
@@ -47,7 +46,7 @@ sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
 sudo yum install -y apache-maven
 ```
 
-If necessary, download and unpack the application.  
+Download and install Nexus.
 
 ```
 sudo wget https://download.sonatype.com/nexus/3/latest-unix.tar.gz
@@ -58,7 +57,7 @@ Remember to create your installation directory first.
 When you are ready to extract the repository manager, run:  
 
 ```
-sudo tar xvzf nexus-<version> from the command line.
+sudo tar xvzf latest-unix.tar.gz from the command line.
 ```
 
 Start the repository manager: 
@@ -67,7 +66,7 @@ Start the repository manager:
 ./bin/nexus run.
 ```
 
-Open your browser to load the repository manager: http://localhost:8081
+Open your browser to load the repository manager: http://<AWS public dns>:8081
 
 In your terminal locate the data directory (../sonatype-work/nexus3/).
 
@@ -103,7 +102,7 @@ Create a pom.xml in the directory:
 touch pom.xml
 ```
 
-Open the POM in a text editor, add the following snippet:
+Open the POM in vim or vi or any other text editor in your terminal and add the following snippet:
 
 ```
 <project xmlns=”http://maven.apache.org/POM/4.0.0″ xmlns:xsi=”http://www.w3.org/2001/XMLSchema-instance” xsi:schemaLocation=”http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd”>
@@ -140,10 +139,13 @@ Open your settings.xml and add the repo URL configured in steps 1 and 2, so that
 
 Save your changes in the settings.xml file.
 
-Your settings.xml file should look like this: 
+If your settings.xml is read only, set it to write mod with: 
 ```
 sudo chmod 755 settings.xml
 ```
+or open it with sudo.
+
+Your settings.xml file should look like this (Don't forget to change the admin and password): 
 
 ```
 <settings>
@@ -152,7 +154,7 @@ sudo chmod 755 settings.xml
       <!--This sends everything else to /public -->
       <id>nexus</id>
       <mirrorOf>*</mirrorOf>
-      <url>http://localhost:8081/repository/maven-proxy-hands-on/</url>
+      <url>http://<AWS public DNS:8081/repository/maven-proxy-hands-on/</url>
     </mirror>
   </mirrors>
   <profiles>
@@ -210,7 +212,7 @@ Click on the component name to review its details.
 
 Next up, configure Maven release and snapshot repositories for deployment. This means updating pom.xml and settings.xml.
 
-Your mirror url now should point to http://localhost:8081/repository/maven-public 
+Your mirror url now should point to http://<AWS public DNS>:8081/repository/maven-public 
 
 So your settings.xml should look like this:
 
@@ -221,7 +223,7 @@ So your settings.xml should look like this:
       <!--This sends everything else to /public -->
       <id>nexus</id>
       <mirrorOf>*</mirrorOf>
-      <url>http://localhost:8081/repository/maven-public/</url>
+      <url>http://<AWS public DNS>:8081/repository/maven-public/</url>
     </mirror>
   </mirrors>
   <profiles>
@@ -313,9 +315,9 @@ Drag and drop the Available repositories you created in the earlier exercises to
 
 Customize your settings for group access.
 
-Copy the URL from the Group Repository you just created. (In this exercise, the repository URL is http://localhost:8081/repository/maven-all).
+Copy the URL from the Group Repository you just created. (In this exercise, the repository URL is http://<AWS public DNS>:8081/repository/maven-all).
 
-Modify the mirror configuration in your settings.xml to point to your group. So the "<url>" tag should have http://localhost:8081/repository/maven-all inside it.
+Modify the mirror configuration in your settings.xml to point to your group. So the "<url>" tag should have http://<AWS public DNS>:8081/repository/maven-all inside it.
 
 So your settings.xml should look like this: 
 
@@ -326,7 +328,7 @@ So your settings.xml should look like this:
       <!--This sends everything else to /public -->
       <id>nexus</id>
       <mirrorOf>*</mirrorOf>
-      <url>http://localhost:8081/repository/maven-all/</url>
+      <url>http://<AWS public DNS>:8081/repository/maven-all/</url>
     </mirror>
   </mirrors>
   <profiles>
