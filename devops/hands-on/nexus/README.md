@@ -37,7 +37,7 @@ sudo yum install java-1.8.0-openjdk
 Download and install Maven
 
 ```
-sudo wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.depel-apache-maven.repo
+sudo wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
 ```
 ```
 sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
@@ -125,7 +125,7 @@ Save the file
 
 Open Nexus Repository Manager UI
 
-Create a repo called maven-proxy-hans-on.
+Create a repo called maven-proxy-hands-on.
 
 Choose recipe: maven2 (proxy) 
 
@@ -223,7 +223,7 @@ So your settings.xml should look like this:
       <!--This sends everything else to /public -->
       <id>nexus</id>
       <mirrorOf>*</mirrorOf>
-      <url>http://<AWS public DNS>:8081/repository/maven-public/</url>
+      <url>http://ec2-3-237-14-190.compute-1.amazonaws.com:8081/repository/maven-public/</url>
     </mirror>
   </mirrors>
   <profiles>
@@ -257,7 +257,7 @@ So your settings.xml should look like this:
     <server>
       <id>nexus</id>
       <username>admin</username>
-      <password>your-password</password> 
+      <password>Aa.123456</password> 
     </server>
   </servers>
 </settings>
